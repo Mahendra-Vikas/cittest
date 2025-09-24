@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Frontend Cit hackathon preparation</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CIT Hackathon Preparation</title>
+  <link rel="stylesheet" href="style.css" />
   <!-- Three.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
 </head>
 <body>
-  <h1>Frontend Practice: 3D Cube</h1>
+  <h1>Frontend + Backend Demo</h1>
   <div id="cube-container"></div>
 
+  <!-- Input + Button -->
+  <div id="api-section">
+    <input type="text" id="user-input" placeholder="Type something..." />
+    <button id="call-api">Send to Backend</button>
+    <p id="api-result"></p>
+  </div>
+
   <script>
-    // Scene
+    // === Cube animation ===
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xeeeeee);
 
-    // Camera
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
@@ -26,18 +32,15 @@
     );
     camera.position.z = 5;
 
-    // Renderer
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById("cube-container").appendChild(renderer.domElement);
 
-    // Cube
     const geometry = new THREE.BoxGeometry();
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
-    // Animation loop
     function animate() {
       requestAnimationFrame(animate);
       cube.rotation.x += 0.01;
@@ -46,11 +49,32 @@
     }
     animate();
 
-    // Resize handling
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // === Backend call ===
+    const backendURL = "https://cittest-1.onrender.com"; // <-- your Render URL
+
+    document.getElementById("call-api").addEventListener("click", () => {
+      const inputVal = document.getElementById("user-input").value;
+
+      fetch(`${backendURL}/predict`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ input: inputVal })
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("api-result").innerText =
+            "Backend says: " + data.output;
+        })
+        .catch(err => {
+          document.getElementById("api-result").innerText =
+            "Error: " + err;
+        });
     });
   </script>
 </body>

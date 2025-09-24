@@ -12,5 +12,28 @@ h1 {
 
 #cube-container {
   width: 100%;
-  height: 90vh;
+  height: 70vh;
+}
+
+#api-section {
+  margin: 20px;
+}
+
+#user-input {
+  padding: 10px;
+  width: 200px;
+  font-size: 1rem;
+}
+
+#call-api {
+  padding: 10px 20px;
+  margin-left: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#api-result {
+  margin-top: 15px;
+  font-weight: bold;
+  color: #006600;
 }
